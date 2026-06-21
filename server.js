@@ -1,54 +1,104 @@
 const express = require("express");
-const cors = require("cors");
+const bodyParser = require("body-parser");
+const fs = require("fs");
+const path = require("path");
+const { v4: uuidv4 } = require("uuid");
 
 const app = express();
-app.use(cors());
-app.use(express.json());
+const PORT = 3000;
 
-// Ticketless raffle = just a list of names
-let entries = [];
+const ADMIN_PASSWORD = "ChangeMe123";
 
-// Enter raffle (no ticket system, just name)
-app.post("/enter", (req, res) => {
+app.use(bodyParser.json());
+app.use(express.static("public"));
+
+const dataFile = "./data/raffles.json";
+
+function loadData() {
+  if (!fs.existsSync(dataFile)) {
+    return { entries: [], winners: [] };
+  }
+  return JSON.parse(fs.readFileSync(dataFile));
+}
+
+function saveData(data) {
+  fs.writeFileSync(dataFile, JSON.stringify(data, null, 2));
+}
+
+app.post("/api/enter", (req, res) => {
   const { name } = req.body;
 
-  if (!name || name.trim() === "") {
+  if (!name) {
     return res.status(400).json({ error: "Name required" });
   }
 
-  entries.push(name.trim());
+  const data = loadData();
 
-  res.json({
-    message: "Entered raffle successfully",
-    totalEntries: entries.length
-  });
-});
+  const exists = data.entries.some(
+    e => e.name.toLowerCase() === name.toLowerCase()
+  );
 
-// Get entries
-app.get("/entries", (req, res) => {
-  res.json(entries);
-});
-
-// Pick winner randomly
-app.get("/winner", (req, res) => {
-  if (entries.length === 0) {
-    return res.json({ error: "No entries yet" });
+  if (exists) {
+    return res.status(400).json({
+      error: "Already entered"
+    });
   }
 
-  const winner = entries[Math.floor(Math.random() * entries.length)];
+  data.entries.push({
+    id: uuidv4(),
+    name,
+    timestamp: new Date()
+  });
 
-  res.json({ winner });
+  saveData(data);
+
+  res.json({ success: true });
 });
 
-// Reset raffle (admin use)
-app.post("/reset", (req, res) => {
-  entries = [];
-  res.json({ message: "Raffle reset complete" });
+app.get("/api/entries", (req, res) => {
+  if (req.headers.password !== ADMIN_PASSWORD) {
+    return res.status(401).send();
+  }
+
+  res.json(loadData().entries);
 });
 
-// IMPORTANT for Render deployment
-const PORT = process.env.PORT || 3000;
+app.post("/api/draw", (req, res) => {
+  if (req.headers.password !== ADMIN_PASSWORD) {
+    return res.status(401).send();
+  }
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  const data = loadData();
+
+  if (data.entries.length === 0) {
+    return res.status(400).json({
+      error: "No entries"
+    });
+  }
+
+  const winner =
+    data.entries[
+      Math.floor(Math.random() * data.entries.length)
+    ];
+
+  data.winners.push({
+    ...winner,
+    drawTime: new Date()
+  });
+
+  saveData(data);
+
+  res.json(winner);
 });
+
+app.get("/api/winners", (req, res) => {
+  if (req.headers.password !== ADMIN_PASSWORD) {
+    return res.status(401).send();
+  }
+
+  res.json(loadData().winners);
+});
+
+app.listen(PORT, () =>
+  console.log(`Running on port ${PORT}`)
+);

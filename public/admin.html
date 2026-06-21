@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<h1>Raffle Admin</h1>
+
+<input id="password"
+placeholder="Admin Password">
+
+<button onclick="drawWinner()">
+Draw Winner
+</button>
+
+<h2>Winner</h2>
+<div id="winner"></div>
+
+<script>
+async function drawWinner() {
+  const password =
+    document.getElementById("password").value;
+
+  const res = await fetch("/api/draw", {
+    method: "POST",
+    headers: { password }
+  });
+
+  const winner = await res.json();
+
+  document.getElementById("winner")
+    .innerText = winner.name;
+}
+</script>
+
+</body>
+</html>
