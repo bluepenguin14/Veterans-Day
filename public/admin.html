@@ -11,6 +11,9 @@
 <input id="password"
 placeholder="Admin Password">
 
+<h2>Total Entrants</h2>
+<div id="entrantCount">0</div>
+  
 <button onclick="drawWinner()">
 Draw Winner
 </button>
@@ -18,6 +21,17 @@ Draw Winner
 <button onclick="resetRaffle()">
   Reset Raffle
 </button>
+
+<button onclick="loadEntrantCount()">
+  Refresh Entrant Count
+</button>
+
+<h2>Entrants</h2>
+<button onclick="loadEntrants()">
+  Show Entrants
+</button>
+
+<ul id="entrantList"></ul>
   
 <h2>Winner</h2>
 <div id="winner"></div>
@@ -47,8 +61,55 @@ async function drawWinner() {
     data.name;
 
   loadWinners();
+  loadEntrantCount();
+  loadEntrants();
+  
 }
 
+async function loadEntrantCount() {
+  const password =
+    document.getElementById("password").value;
+
+  const res = await fetch("/api/entries", {
+    headers: { password }
+  });
+
+  if (!res.ok) return;
+
+  const entries = await res.json();
+
+  document.getElementById("entrantCount").innerText =
+    entries.length;
+}
+
+async function loadEntrants() {
+  const password =
+    document.getElementById("password").value;
+
+  const res = await fetch("/api/entries", {
+    headers: { password }
+  });
+
+  if (!res.ok) {
+    alert("Unable to load entrants");
+    return;
+  }
+
+  const entries = await res.json();
+
+  const list =
+    document.getElementById("entrantList");
+
+  list.innerHTML = "";
+
+  entries.forEach(entry => {
+    const li = document.createElement("li");
+    li.textContent =
+  `${entry.name} (${new Date(entry.timestamp).toLocaleString()})`;
+    list.appendChild(li);
+  });
+}
+  
 async function loadWinners() {
   const password =
     document.getElementById("password").value;
@@ -99,6 +160,9 @@ async function resetRaffle() {
     "Raffle reset successfully";
 
   document.getElementById("winnerList").innerHTML = "";
+  document.getElementById("entrantList").innerHTML = "";
+  document.getElementById("entrantCount").innerText = "0";
+  
 }
 </script>
 
