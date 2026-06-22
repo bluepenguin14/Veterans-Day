@@ -134,8 +134,3 @@ app.post("/api/reset", (req, res) => {
 app.listen(PORT, () =>
   console.log(`Running on port ${PORT}`)
 );
-
-  saveData(data);
-
-  res.json(data);
-});
