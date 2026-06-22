@@ -86,6 +86,40 @@ async function loadEntrantCount() {
     entries.length;
 }
 
+async function exportEntries() {
+  const password =
+    document.getElementById("password").value;
+
+  const res = await fetch(
+    "/api/export-entries",
+    {
+      headers: { password }
+    }
+  );
+
+  if (!res.ok) {
+    alert("Export failed");
+    return;
+  }
+
+  const blob = await res.blob();
+
+  const url =
+    window.URL.createObjectURL(blob);
+
+  const a =
+    document.createElement("a");
+
+  a.href = url;
+  a.download = "raffle-entries.csv";
+
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+
+  window.URL.revokeObjectURL(url);
+}
+  
 async function loadEntrants() {
   const password =
     document.getElementById("password").value;
