@@ -116,6 +116,21 @@ app.get("/api/winners", (req, res) => {
   res.json(loadData().winners);
 });
 
+app.post("/api/reset", (req, res) => {
+  if (req.headers.password !== ADMIN_PASSWORD) {
+    return res.status(401).send();
+  }
+
+  saveData({
+    entries: [],
+    winners: []
+  });
+
+  res.json({
+    success: true
+  });
+});
+
 app.listen(PORT, () =>
   console.log(`Running on port ${PORT}`)
 );
