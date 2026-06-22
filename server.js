@@ -143,6 +143,33 @@ app.post("/api/reset", (req, res) => {
   });
 });
 
+app.get("/api/export-entries", (req, res) => {
+  if (req.headers.password !== ADMIN_PASSWORD) {
+    return res.status(401).send();
+  }
+
+  const entries = loadData().entries;
+
+  let csv =
+    "Name,Tickets,Timestamp\n";
+
+  entries.forEach(entry => {
+    csv += `"${entry.name}",${entry.tickets || 1},"${entry.timestamp}"\n`;
+  });
+
+  res.setHeader(
+    "Content-Type",
+    "text/csv"
+  );
+
+  res.setHeader(
+    "Content-Disposition",
+    "attachment; filename=raffle-entries.csv"
+  );
+
+  res.send(csv);
+});
+
 app.listen(PORT, () =>
   console.log(`Running on port ${PORT}`)
 );
