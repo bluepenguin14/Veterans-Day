@@ -27,7 +27,10 @@ function saveData(data) {
 }
 
 app.post("/api/enter", (req, res) => {
-  const { name } = req.body;
+  const {
+  name,
+  tickets = 1
+} = req.body;
 
   if (!name) {
     return res.status(400).json({ error: "Name required" });
@@ -45,11 +48,12 @@ app.post("/api/enter", (req, res) => {
     });
   }
 
-  data.entries.push({
-    id: uuidv4(),
-    name,
-    timestamp: new Date()
-  });
+data.entries.push({
+  id: uuidv4(),
+  name,
+  tickets,
+  timestamp: new Date()
+});
 
   saveData(data);
 
@@ -91,10 +95,18 @@ if (eligibleEntries.length === 0) {
   });
 }
 
+const weightedPool = [];
+
+eligibleEntries.forEach(entry => {
+  for (let i = 0; i < entry.tickets; i++) {
+    weightedPool.push(entry);
+  }
+});
+
 const winner =
-  eligibleEntries[
+  weightedPool[
     Math.floor(
-      Math.random() * eligibleEntries.length
+      Math.random() * weightedPool.length
     )
   ];
 
