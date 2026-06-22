@@ -22,6 +22,7 @@ function loadData() {
 }
 
 function saveData(data) {
+  console.log("Saving data:", JSON.stringify(data));
   fs.writeFileSync(dataFile, JSON.stringify(data, null, 2));
 }
 
@@ -50,6 +51,8 @@ app.post("/api/enter", (req, res) => {
     timestamp: new Date()
   });
 
+console.log("Adding entry:", name);
+  
   saveData(data);
 
   res.json({ success: true });
@@ -106,3 +109,16 @@ app.get("/api/debug", (req, res) => {
 app.listen(PORT, () =>
   console.log(`Running on port ${PORT}`)
 );
+
+app.get("/api/debug-add", (req, res) => {
+  const data = loadData();
+
+  data.entries.push({
+    id: uuidv4(),
+    name: "Debug User"
+  });
+
+  saveData(data);
+
+  res.json(data);
+});
