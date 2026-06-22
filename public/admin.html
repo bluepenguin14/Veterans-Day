@@ -104,8 +104,8 @@ async function loadEntrants() {
 
   entries.forEach(entry => {
     const li = document.createElement("li");
-    li.textContent =
-  `${entry.name} (${new Date(entry.timestamp).toLocaleString()})`;
+li.textContent =
+  `${entry.name} - ${entry.tickets} ticket(s) - Entered ${new Date(entry.timestamp).toLocaleString()}`;
     list.appendChild(li);
   });
 }
