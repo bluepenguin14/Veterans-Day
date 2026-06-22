@@ -77,19 +77,35 @@ app.post("/api/draw", (req, res) => {
     });
   }
 
-  const winner =
-    data.entries[
-      Math.floor(Math.random() * data.entries.length)
-    ];
+  const previousWinnerIds =
+  data.winners.map(w => w.id);
 
-  data.winners.push({
-    ...winner,
-    drawTime: new Date()
+const eligibleEntries =
+  data.entries.filter(
+    e => !previousWinnerIds.includes(e.id)
+  );
+
+if (eligibleEntries.length === 0) {
+  return res.status(400).json({
+    error: "No eligible entries remaining"
   });
+}
 
-  saveData(data);
+const winner =
+  eligibleEntries[
+    Math.floor(
+      Math.random() * eligibleEntries.length
+    )
+  ];
 
-  res.json(winner);
+data.winners.push({
+  ...winner,
+  drawTime: new Date()
+});
+
+saveData(data);
+
+res.json(winner);
 });
 
 app.get("/api/winners", (req, res) => {
