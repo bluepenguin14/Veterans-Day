@@ -15,6 +15,10 @@ placeholder="Admin Password">
 Draw Winner
 </button>
 
+<button onclick="resetRaffle()">
+  Reset Raffle
+</button>
+  
 <h2>Winner</h2>
 <div id="winner"></div>
 
@@ -42,6 +46,40 @@ async function drawWinner() {
   document.getElementById("winner").innerText =
     data.name;
 }
+
+async function resetRaffle() {
+  const password =
+    document.getElementById("password").value;
+
+  const confirmed = confirm(
+    "Are you sure you want to reset the raffle? This will remove all entries and winners."
+  );
+
+  if (!confirmed) return;
+
+  const res = await fetch("/api/reset", {
+    method: "POST",
+    headers: { password }
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    alert(data.error || "Reset failed");
+    return;
+  }
+
+  document.getElementById("winner").innerText =
+    "Raffle reset successfully";
+
+  const winnerList =
+    document.getElementById("winnerList");
+
+  if (winnerList) {
+    winnerList.innerHTML = "";
+  }
+}
+  
 </script>
 
 </body>
