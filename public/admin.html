@@ -45,6 +45,32 @@ async function drawWinner() {
 
   document.getElementById("winner").innerText =
     data.name;
+
+  loadWinners();
+}
+
+async function loadWinners() {
+  const password =
+    document.getElementById("password").value;
+
+  const res = await fetch("/api/winners", {
+    headers: { password }
+  });
+
+  if (!res.ok) return;
+
+  const winners = await res.json();
+
+  const list =
+    document.getElementById("winnerList");
+
+  list.innerHTML = "";
+
+  winners.forEach(winner => {
+    const li = document.createElement("li");
+    li.textContent = winner.name;
+    list.appendChild(li);
+  });
 }
 
 async function resetRaffle() {
@@ -72,14 +98,8 @@ async function resetRaffle() {
   document.getElementById("winner").innerText =
     "Raffle reset successfully";
 
-  const winnerList =
-    document.getElementById("winnerList");
-
-  if (winnerList) {
-    winnerList.innerHTML = "";
-  }
+  document.getElementById("winnerList").innerHTML = "";
 }
-  
 </script>
 
 </body>
