@@ -18,6 +18,9 @@ Draw Winner
 <h2>Winner</h2>
 <div id="winner"></div>
 
+<h2>Previous Winners</h2>
+<ul id="winnerList"></ul>
+
 <script>
 async function drawWinner() {
   const password =
@@ -28,10 +31,16 @@ async function drawWinner() {
     headers: { password }
   });
 
-  const winner = await res.json();
+  const data = await res.json();
 
-  document.getElementById("winner")
-    .innerText = winner.name;
+  if (!res.ok) {
+    document.getElementById("winner").innerText =
+      data.error || "Error";
+    return;
+  }
+
+  document.getElementById("winner").innerText =
+    data.name;
 }
 </script>
 
