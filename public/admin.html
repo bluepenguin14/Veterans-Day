@@ -14,10 +14,6 @@ placeholder="Admin Password">
 <h2>Total Entrants</h2>
 <div id="entrantCount">0</div>
   
-<button onclick="drawWinner()">
-Draw Winner
-</button>
-
 <button onclick="resetRaffle()">
   Reset Raffle
 </button>
@@ -26,16 +22,20 @@ Draw Winner
   Refresh Entrant Count
 </button>
 
-<button onclick="exportEntries()">
-  Download Entrants (Excel)
-</button>
-  
 <h2>Entrants</h2>
 <button onclick="loadEntrants()">
   Show Entrants
 </button>
 
+<button onclick="exportEntries()">
+  Download Entrants (Excel)
+</button>
+  
 <ul id="entrantList"></ul>
+
+<button onclick="drawWinner()">
+Draw Winner
+</button>
   
 <h2>Winner</h2>
 <div id="winner"></div>
