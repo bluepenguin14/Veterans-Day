@@ -68,6 +68,39 @@ app.get("/api/entries", (req, res) => {
   res.json(loadData().entries);
 });
 
+app.post("/api/admin-enter", (req, res) => {
+
+  if (req.headers.password !== ADMIN_PASSWORD) {
+    return res.status(401).send();
+  }
+
+  const {
+    name,
+    tickets = 1
+  } = req.body;
+
+  if (!name) {
+    return res.status(400).json({
+      error: "Name required"
+    });
+  }
+
+  const data = loadData();
+
+  data.entries.push({
+    id: uuidv4(),
+    name,
+    tickets,
+    timestamp: new Date()
+  });
+
+  saveData(data);
+
+  res.json({
+    success: true
+  });
+});
+
 app.post("/api/draw", (req, res) => {
   if (req.headers.password !== ADMIN_PASSWORD) {
     return res.status(401).send();
