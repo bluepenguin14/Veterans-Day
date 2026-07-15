@@ -14,10 +14,6 @@ placeholder="Admin Password">
 <h2>Total Entrants</h2>
 <div id="entrantCount">0</div>
   
-<button onclick="resetRaffle()">
-  Reset Raffle
-</button>
-
 <button onclick="loadEntrantCount()">
   Refresh Entrant Count
 </button>
@@ -43,6 +39,10 @@ Draw Winner
 <h2>Previous Winners</h2>
 <ul id="winnerList"></ul>
 
+<button onclick="resetRaffle()">
+  Reset Raffle
+</button>
+  
 <script>
 async function drawWinner() {
   const password =
