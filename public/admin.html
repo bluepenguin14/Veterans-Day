@@ -11,6 +11,38 @@
 <input id="password"
 placeholder="Admin Password">
 
+<hr>
+
+<h2>➕ Admin Add Entrant</h2>
+
+<input
+  id="adminName"
+  placeholder="Entrant Name">
+
+<input
+  id="adminTickets"
+  type="number"
+  min="1"
+  value="1"
+  placeholder="Tickets">
+
+<button
+  onclick="adminAddEntrant()"
+  style="
+    background:#28a745;
+    color:white;
+    font-weight:bold;
+    padding:10px 20px;
+    border-radius:8px;
+    cursor:pointer;
+  ">
+  ➕ Add Entrant
+</button>
+
+<div id="adminMessage"></div>
+
+<hr>
+  
 <h2>Total Entrants</h2>
 <div id="entrantCount">0</div>
   
