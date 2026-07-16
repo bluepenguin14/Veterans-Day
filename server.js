@@ -78,15 +78,20 @@ app.post("/api/admin-add", (req, res) => {
 
   const data = loadData();
 
-  const ticketCount = parseInt(tickets) || 1;
+const ticketCount = parseInt(tickets) || 1;
 
-  for (let i = 0; i < ticketCount; i++) {
-    data.entries.push({
-      id: uuidv4(),
-      name: name.trim(),
-      tickets: ticketCount,
-      timestamp: new Date()
-    });
+data.entries.push({
+  id: uuidv4(),
+  name: name.trim(),
+  tickets: ticketCount,
+  timestamp: new Date()
+});
+
+saveData(data);
+
+res.json({
+  success: true
+});
   }
 
   saveData(data);
@@ -124,12 +129,14 @@ app.post("/api/admin-enter", (req, res) => {
 
   const data = loadData();
 
-  data.entries.push({
-    id: uuidv4(),
-    name,
-    tickets,
-    timestamp: new Date()
-  });
+const ticketCount = parseInt(req.body.tickets) || 1;
+
+data.entries.push({
+  id: uuidv4(),
+  name: name.trim(),
+  tickets: ticketCount,
+  timestamp: new Date()
+});
 
   saveData(data);
 
@@ -151,7 +158,7 @@ app.post("/api/draw", (req, res) => {
     });
   }
 
-  const previousWinnerIds =
+const previousWinnerIds =
   data.winners.map(w => w.id);
 
 const eligibleEntries =
@@ -165,20 +172,32 @@ if (eligibleEntries.length === 0) {
   });
 }
 
-const weightedPool = [];
+// Calculate total tickets
+const totalTickets =
+  eligibleEntries.reduce(
+    (sum, entry) =>
+      sum + (parseInt(entry.tickets) || 1),
+    0
+  );
 
-eligibleEntries.forEach(entry => {
-  for (let i = 0; i < entry.tickets; i++) {
-    weightedPool.push(entry);
+// Pick a random ticket
+let randomTicket =
+  Math.floor(Math.random() * totalTickets);
+
+// Find the winner
+let winner = null;
+
+for (const entry of eligibleEntries) {
+
+  randomTicket -=
+    (parseInt(entry.tickets) || 1);
+
+  if (randomTicket < 0) {
+    winner = entry;
+    break;
   }
-});
 
-const winner =
-  weightedPool[
-    Math.floor(
-      Math.random() * weightedPool.length
-    )
-  ];
+}
 
 data.winners.push({
   ...winner,
@@ -188,7 +207,6 @@ data.winners.push({
 saveData(data);
 
 res.json(winner);
-});
 
 app.get("/api/winners", (req, res) => {
   if (req.headers.password !== ADMIN_PASSWORD) {
