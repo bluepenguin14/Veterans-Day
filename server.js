@@ -60,6 +60,43 @@ data.entries.push({
   res.json({ success: true });
 });
 
+app.post("/api/admin-add", (req, res) => {
+
+  if (req.headers.password !== ADMIN_PASSWORD) {
+    return res.status(401).json({
+      error: "Unauthorized"
+    });
+  }
+
+  const { name, tickets } = req.body;
+
+  if (!name || !name.trim()) {
+    return res.status(400).json({
+      error: "Name required"
+    });
+  }
+
+  const data = loadData();
+
+  const ticketCount = parseInt(tickets) || 1;
+
+  for (let i = 0; i < ticketCount; i++) {
+    data.entries.push({
+      id: uuidv4(),
+      name: name.trim(),
+      tickets: ticketCount,
+      timestamp: new Date()
+    });
+  }
+
+  saveData(data);
+
+  res.json({
+    success: true
+  });
+
+});
+
 app.get("/api/entries", (req, res) => {
   if (req.headers.password !== ADMIN_PASSWORD) {
     return res.status(401).send();
