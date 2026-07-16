@@ -20,8 +20,7 @@ const tickets =
 
   const data = await res.json();
 
-  document.getElementById("msg").innerText =
-    data.success
-      ? "Entry Accepted!"
-      : data.error;
+document.getElementById("message").innerHTML =
+    `✅ Thank you <strong>${name}</strong>!<br>
+     Your <strong>${tickets}</strong> ticket(s) have been entered into today's drawing.`;
 }
