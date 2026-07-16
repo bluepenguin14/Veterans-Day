@@ -71,3 +71,85 @@ function showBanner(message, type = "success") {
     }, 3500);
 
 }
+
+const themeButton =
+    document.getElementById("themeToggle");
+
+function initializeTheme(){
+
+    const saved =
+        localStorage.getItem("theme");
+
+    if(saved==="dark"){
+
+        document.body.classList.add("dark");
+
+    }
+
+    themeButton.onclick = toggleTheme;
+
+}
+
+function toggleTheme(){
+
+    document.body.classList.toggle("dark");
+
+    const dark =
+        document.body.classList.contains("dark");
+
+    localStorage.setItem(
+        "theme",
+        dark ? "dark":"light"
+    );
+
+}
+
+const presentationButton =
+    document.getElementById("presentationMode");
+
+function initializePresentationMode(){
+
+    if(localStorage.getItem("presentation")=="on"){
+
+        document.body.classList.add("presentation");
+
+    }
+
+    presentationButton.onclick=function(){
+
+        document.body.classList.toggle("presentation");
+
+        localStorage.setItem(
+            "presentation",
+            document.body.classList.contains("presentation")
+                ?"on":"off"
+        );
+
+    };
+
+}
+
+const accessibilityButton =
+    document.getElementById("accessibilityMode");
+
+function initializeAccessibilityMode(){
+
+    if(localStorage.getItem("accessibility")=="on"){
+
+        document.body.classList.add("accessibility");
+
+    }
+
+    accessibilityButton.onclick=function(){
+
+        document.body.classList.toggle("accessibility");
+
+        localStorage.setItem(
+            "accessibility",
+            document.body.classList.contains("accessibility")
+                ?"on":"off"
+        );
+
+    };
+
+}
