@@ -354,6 +354,13 @@ async function resetRaffle() {
   document.getElementById("winnerList").innerHTML = "";
   document.getElementById("entrantList").innerHTML = "";
   document.getElementById("entrantCount").innerText = "0";
+
+// Clear the Admin Add Entrant form
+document.getElementById("adminName").value = "";
+document.getElementById("adminTickets").value = 1;
+
+// Clear the success message
+document.getElementById("adminMessage").innerHTML = "";
   
 }
 </script>
