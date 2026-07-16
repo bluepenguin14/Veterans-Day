@@ -286,6 +286,46 @@ async function loadWinners() {
   });
 }
 
+async function adminAddEntrant() {
+
+  const password = document.getElementById("password").value;
+  const name = document.getElementById("adminName").value;
+  const tickets = parseInt(document.getElementById("adminTickets").value) || 1;
+
+  if (!name.trim()) {
+    alert("Please enter a name.");
+    return;
+  }
+
+  const res = await fetch("/api/admin-add", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      password: password
+    },
+    body: JSON.stringify({
+      name,
+      tickets
+    })
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    alert(data.error || "Unable to add entrant.");
+    return;
+  }
+
+  document.getElementById("adminMessage").innerHTML =
+    `✅ ${name} added with ${tickets} ticket(s).`;
+
+  document.getElementById("adminName").value = "";
+  document.getElementById("adminTickets").value = 1;
+
+  loadEntrantCount();
+  loadEntrants();
+}
+  
 async function resetRaffle() {
   const password =
     document.getElementById("password").value;
