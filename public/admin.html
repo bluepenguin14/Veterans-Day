@@ -4,15 +4,56 @@
   <title>Admin</title>
   <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
 
-<h1>Raffle Admin</h1>
+<div class="container">
 
-<input id="password"
-placeholder="Admin Password">
+<header class="header">
 
+<div class="logo-area">
+
+<h1>🇺🇸 Veterans Day Ticketless Raffle</h1>
+
+<p id="todayDate"></p>
+
+</div>
+
+<div class="header-buttons">
+
+<button id="themeToggle" class="btn btn-secondary">
+🌙 Dark Mode
+</button>
+
+<button id="presentationMode" class="btn btn-secondary">
+🖥 Presentation
+</button>
+
+<button id="accessibilityMode" class="btn btn-secondary">
+🔍 Large Text
+</button>
+
+</div>
+
+</header>
+
+<div id="messageBanner"></div>
+
+<section class="card">
+
+<h2>🔐 Administrator Login</h2>
+
+<input
+id="password"
+type="password"
+placeholder="Enter Admin Password">
+
+</section>  
+  
 <hr>
 
+<section class="card">
+  
 <h2>➕ Admin Add Entrant</h2>
 
 <input
@@ -42,6 +83,10 @@ placeholder="Admin Password">
 <div id="adminMessage"></div>
 
 <hr>
+
+</section>
+
+<section class="card">
   
 <h2>Total Entrants</h2>
 <div id="entrantCount">0</div>
@@ -61,22 +106,54 @@ placeholder="Admin Password">
   
 <ul id="entrantList"></ul>
 
-<button onclick="drawWinner()">
-Draw Winner
+<section class="card draw-card">
+
+<h2>🎉 Daily Drawing</h2>
+
+<button
+id="drawButton"
+class="btn btn-draw"
+onclick="drawWinner()">
+
+🎉 DRAW TODAY'S WINNER 🎉
+
 </button>
 
-<h2>Reset Raffle</h2>
+<section class="card">
   
-<button onclick="resetRaffle()">
-  Reset Raffle
-</button>
-  
-<h2>Winner</h2>
-<div id="winner"></div>
+<section class="card winner-card">
 
+<h2>🏆 Today's Winner</h2>
+
+<div id="winner" class="winner-name">
+
+No winner yet
+
+</div>
+
+</section>
+
+<section class="card">
+  
 <h2>Previous Winners</h2>
 <ul id="winnerList"></ul>
 
+</section>
+  
+<section class="card">
+
+<h2>⚙️ Maintenance</h2>
+
+<button
+class="btn btn-danger"
+onclick="resetRaffle()">
+
+🗑 Reset Today's Raffle
+
+</button>
+
+</section>
+  
 <script>
 async function drawWinner() {
   const password =
