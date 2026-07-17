@@ -78,21 +78,22 @@ app.post("/api/admin-add", (req, res) => {
 
   const data = loadData();
 
-const ticketCount = parseInt(tickets) || 1;
+  const ticketCount = parseInt(tickets) || 1;
 
-data.entries.push({
-  id: uuidv4(),
-  name: name.trim(),
-  tickets: ticketCount,
-  timestamp: new Date()
+  data.entries.push({
+    id: uuidv4(),
+    name: name.trim(),
+    tickets: ticketCount,
+    timestamp: new Date()
+  });
+
+  saveData(data);
+
+  res.json({
+    success: true
+  });
+
 });
-
-saveData(data);
-
-res.json({
-  success: true
-});
-  }
 
   saveData(data);
 
